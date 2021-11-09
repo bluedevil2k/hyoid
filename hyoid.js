@@ -5,42 +5,42 @@ export default const Hyoid = {
 	// store the sounds by name and url
 	// to know which sounds are alreay loaded
 	// TODO convert this to a cache object with eviction rules and memory management
-	let loadedSounds = [],
+	loadedSounds: [],
 
 	// destroys all the created Howl sounds and cleans up the local store
-	const unload = () => {
-		Hower.unload();
+	unload: () => {
+		Howler.unload();
 		loadedSounds = [];
-	}
+	},
 
 	// stops all currently playing sounds
-	const stopAll = () => {
+	stopAll: () => {
 		Howler.stop();
-	}
+	},
 
 	// mute or unmute the currently playing sound(s)
-	const mute = (isMuted) => {
+	mute: (isMuted) => {
 		Howler.mute(isMuted);
 	},
 
 	// set the global volume level
 	// should be a double between 0 and 1
-	const volumeLevel = (volumeLevel) => {
+	volumeLevel: (volumeLevel) => {
 		Howler.volume(volumeLevel);
 	},
 
 	// resets the global volume level back to 1
-	const resetVolumeLevel = () => {
+	resetVolumeLevel: () => {
 		Howler.volume(1);
-	}
+	},
 
 	// load the sound give the URL or a name for it
 	// if there's no URL, then use the URL as the sound name as well
 	// this function will block until the sound is loaded
 	// if the sound should just load in the background without blocking, don't add 'await' to the function call
-	const load = async(url, name='', options={}) => {
+	load: async(url, name='', options={}) => {
 		let storedName = name || url;
-		
+
 		return new Promise((res, rej) => {
 			const howl = new Howl({
 				src: [storedName],
@@ -59,7 +59,7 @@ export default const Hyoid = {
 	},
 
 	// load an array of sounds and await them all loading
-	const loadAll = async(sounds, options={}) => {
+	loadAll: async(sounds, options={}) => {
 		return Promise.all(sounds.map(async(sound) => {
 			await load(sound, '', options);
 		}));
@@ -69,7 +69,7 @@ export default const Hyoid = {
 	// if the sound is not already loaded, this function will block until the sound is loaded
 	// then block until the sound is finished playing
 	// if the sound should just play without blocking, don't add 'await' to the function call
-	const play = async(nameOrUrl) => {
+	play: async(nameOrUrl) => {
 		let sound = null;
 		if (typeof loadedSounds[nameOrUrl] === 'undefined') {
 			sound = await load(nameOrUrl);
@@ -92,7 +92,7 @@ export default const Hyoid = {
 	},
 
 	// pauses the sound given the URL or name
-	const pause = (nameOrUrl) => {
+	pause: (nameOrUrl) => {
 		let sound = loadedSounds[nameOrUrl];
 		if (typeof sound !== 'undefined') {
 			sound.pause();
@@ -100,7 +100,7 @@ export default const Hyoid = {
 	},
 
 	// stops the sound given the URL or name
-	const stop = (nameOrUrl) => {
+	stop: (nameOrUrl) => {
 		let sound = loadedSounds[nameOrUrl];
 		if (typeof sound !== 'undefined') {
 			sound.stop();
